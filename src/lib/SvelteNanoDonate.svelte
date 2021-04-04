@@ -45,6 +45,8 @@
     // high-resolution displays).
     qrCode = new QRious({
       element: qrCodeView,
+      foreground: 'black',
+      background: 'white',
       value: '',
       size: 1600
     })
@@ -101,6 +103,7 @@
     margin: 1em auto;
     max-width: 21em;
     text-align: center;
+    background: white;
   }
 
   /* Disable the default fieldset styles (border + spacing) */
