@@ -45,66 +45,58 @@
   }
 </script>
 
-<form on:submit|preventDefault>
-  <div>
+<section>
+  <h2>Donate</h2>
+  <form on:submit|preventDefault>
+    <fieldset id='nanoAmount'>
+      <legend class='visually-hidden'>Donate NANO</legend>
+      <input type='number' min='1' bind:value={amount} on:input={updateModel}>
+      <label class='unselectable visually-hidden' for='amount'>Amount</label>
     <fieldset>
-      <div class='nanoAmount'>
-        <legend class='visually-hidden'>Amount of donation (NANO)</legend>
-        <div class='option'>
-          <input id='amount' type='number' min='1' bind:value={amount} on:input={updateModel}>
-          <label class='unselectable visually-hidden' for='amount'>Amount</label>
-        </div>
-        <div class='option currency'>
-          <select name="currency" id="currency" bind:value={currency} on:change={updateModel} on:blur={updateModel}>
-            <CurrencyOptions />
-          </select>
-          <label class='unselectable visually-hidden' for='currency'>Currency</label>
-        </div>
-      </div>
+
+    <fieldset id="currency">
+      <select bind:value={currency} on:change={updateModel} on:blur={updateModel}>
+        <CurrencyOptions />
+      </select>
+      <label class='unselectable visually-hidden' for='currency'>Currency</label>
     </fieldset>
-    <p id='amountInNanoDisplay'>
-      <a href={paymentLink}>{paymentMessage}</a>
-    </p>
-    <canvas bind:this={qrCodeView}></canvas>
-    <p><small>Exchange rates courtesy of <a href='https://www.coingecko.com/en/api'>CoinGecko API</a>.</small></p>
-  </div>
-</form>
+  </form>
+
+  <p id='sendNanoLink'>
+    <a href={paymentLink}>{paymentMessage}</a>
+  </p>
+
+  <canvas bind:this={qrCodeView}></canvas>
+
+  <p><small>Exchange rates courtesy of <a href='https://www.coingecko.com/en/api'>CoinGecko API</a>. Widget by <a href='https://small-tech.org/fund-us'>Small Technology Foundation.</a></small></p>
+</section>
 
 <style>
-  form {
-    /* give form a max-width and center when it exceeds that width */
+  section {
+    /* give form a max-width and center it when it exceeds that width */
     margin: 1em auto;
     max-width: 21em;
   }
-  /* Disable the default fieldset styles (border + spacing) */
 
+  /* Disable the default fieldset styles (border + spacing) */
   fieldset {
     border: none;
-    margin: 0 0 1em 0; /* spacing between rows of buttons (overridden when there’s grid) */
     padding: 0;
+    display: contents;
   }
-
 
   /* treat nano payment amount and currency like other labels so focus styles match */
-  #amount,
-  #currency {
-    border-width: 0.16rem;
+  input, select {
     border-style: solid;
+    background: #fff;
+    border: 0.2em solid #d8e5ef;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: rgb(48, 67, 73);
+    padding: 1em;
   }
 
-  #amount:before {
-    border-radius: 0.4rem;
-    content: "";
-    display: block;
-    height: 100%;
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 100%;
-  }
-
-  /* center Nano payment link */
-  #amountInNanoDisplay {
+  * {
     text-align: center;
   }
 
@@ -114,31 +106,36 @@
     max-width: 21em;
   }
 
-  /* -------------------------------------------------------------------------
-  Grid layout (when grid is supported by the browser) */
+  #sendNanoLink {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+  }
+
+  a {
+    color: rgb(48, 67, 73);
+  }
 
   @supports (display: grid) {
     /* remove spacing required for hierarchy when there’s no grid */
 
-    fieldset {
-      margin-bottom: 0.5em;
-    }
-
-    .nanoAmount {
+    form {
+      /* margin-bottom: 0.5em; */
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      grid-gap: 0.2em;
+      grid-template-columns: 30% 1fr;
+      grid-template-areas: "amount currency";
+      grid-gap: 0.5em;
     }
 
-    .nanoAmount .option {
-      grid-column: span 1; /* donation tier options and nano amount option span one column */
-      grid-row: span 1; /* donation tier options span one row */
+    #nanoAmount {
+      grid-column: amount;
     }
 
-    /* Type of donation and payment type */
-
-    .nanoAmount .option.currency {
-      grid-column: span 3; /* make nano currency span three columns of grid */
+    #currency {
+      grid-column: currency;
     }
   } /* end @supports display: grid; */
 
@@ -160,15 +157,8 @@
     user-select: none;
   }
 
-  /* a class for hiding items both visually and from assistive technology */
-  .hidden {
-    display: none;
-  }
-
-  /* A class for hiding items visually while keeping them visible to assistive technology.
+  /* Hide items visually while keeping them visible to assistive technology.
     Use with caution and avoid where the content can be happily shown. */
-  /* this class is also used in the theme’s CSS for the rest of the site */
-
   .visually-hidden {
     border: 0 !important;
     clip: rect(1px, 1px, 1px, 1px) !important;
