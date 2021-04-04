@@ -12,7 +12,7 @@ cd svelte-nano-donate-demo
 npm i
 ```
 
-(Or use the template feature on GitHub or fork/clone using git.)
+(Or just fork/clone using git.)
 
 ## Running/Developing
 
