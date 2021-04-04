@@ -2,11 +2,13 @@
   import { onMount } from 'svelte'
   import QRious from 'qrious'
   import CurrencyOptions from './CurrencyOptions.svelte'
+  import { lighten } from './QuickAndDirtyColour.js'
 
   // Props. Pass these to the component.
   export let address
   export let amount = 3        // (optional)
   export let currency = 'eur'  // (optional)
+  export let theme = null
 
   // Mnano = 10³⁰ raw
   const Mnano = 1000000000000000000000000000000
@@ -18,6 +20,23 @@
   let paymentMessage = ''
 
   onMount (async () => {
+    if (theme !== null) {
+      // Apply any CSS variables that were provided in the
+      // style property.
+      console.log(theme)
+      Object.keys(theme).forEach(cssVariable => {
+        document.documentElement.style
+    .setProperty(`--${cssVariable}`, theme[cssVariable])
+
+        // If base colour is being set, calculate the other
+        // colours from it unless they’ve been specifically provided.
+        if (cssVariable === 'colour' && theme['border-colour'] === undefined) {
+          const borderColour = lighten(theme['colour'], 70)
+          document.documentElement.style.setProperty('--border-colour', borderColour)
+        }
+      })
+    }
+
     // Get the current exchange rates for nano at the start.
     const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd,idr,twd,eur,krw,jpy,rub,cny,aed,ars,aud,bdt,bhd,bmd,brl,cad,chf,clp,czk,dkk,gbp,hkd,huf,ils,inr,kwd,lkr,mmk,mxn,myr,ngn,nok,nzd,php,pkr,pln,sar,sek,sgd,thb,try,uah,vef,vnd,zar,xdr')
     exchangeRates = (await response.json()).nano
@@ -72,6 +91,11 @@
 </section>
 
 <style>
+  :root {
+    --colour: rgb(48, 67, 73);
+    --border-colour:rgb(215,216,217);
+  }
+
   section {
     /* give form a max-width and center it when it exceeds that width */
     margin: 1em auto;
@@ -86,14 +110,17 @@
     display: contents;
   }
 
+  input, select, a {
+    color: var(--colour);
+  }
+
   /* treat nano payment amount and currency like other labels so focus styles match */
   input, select {
     border-style: solid;
     background: #fff;
-    border: 0.2em solid #d8e5ef;
+    border: 0.2em solid var(--border-colour);
     border-radius: 5px;
     box-sizing: border-box;
-    color: rgb(48, 67, 73);
     padding: 0.5em;
     font-size: 1.25em;
     width: 100%;
@@ -104,8 +131,6 @@
     margin-bottom: 0.5em;
     max-width: 21em;
   }
-
-  a { color: rgb(48, 67, 73); }
 
   p small {
     color: #7d7d7d;
