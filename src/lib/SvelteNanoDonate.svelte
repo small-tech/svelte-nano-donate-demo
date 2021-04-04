@@ -4,7 +4,8 @@
 
   // Props. Pass these to the component.
   export let address
-  export let amount = 3  // (optional)
+  export let amount = 3        // (optional)
+  export let currency = 'eur'  // (optional)
 
   // Mnano = 10³⁰ raw
   const Mnano = 1000000000000000000000000000000
@@ -12,13 +13,10 @@
   let qrCodeView
   let qrCode
   let exchangeRates
-  let localCurrency
   let paymentLink
   let paymentMessage = ''
 
   onMount (async () => {
-    localCurrency = 'eur'
-
     // Get the current exchange rates for nano at the start.
     const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd,idr,twd,eur,krw,jpy,rub,cny,aed,ars,aud,bdt,bhd,bmd,brl,cad,chf,clp,czk,dkk,gbp,hkd,huf,ils,inr,kwd,lkr,mmk,mxn,myr,ngn,nok,nzd,php,pkr,pln,sar,sek,sgd,thb,try,uah,vef,vnd,zar,xdr')
     const responseJson = await response.json()
@@ -34,7 +32,7 @@
   })
 
   function update () {
-    const priceOfCurrencyInNano = exchangeRates[localCurrency]
+    const priceOfCurrencyInNano = exchangeRates[currency]
     const amountInNANO = amount / priceOfCurrencyInNano
     const amountInRaw = amountInNANO * Mnano
 
@@ -50,13 +48,13 @@
   <div id='nanoPayment'>
     <fieldset>
       <div class='nanoAmount'>
-        <legend class='visually-hidden'>Amount of donation (nano)</legend>
+        <legend class='visually-hidden'>Amount of donation (NANO)</legend>
         <div class='option'>
           <input id='amount' type='number' min='1' bind:value={amount} on:input={update}>
           <label class='nanoPaymentNumberButtonLabel unselectable visually-hidden' for='amount'>Amount</label>
         </div>
         <div class='option currency'>
-          <select name="localCurrency" id="localCurrency" bind:value={localCurrency} on:change={update}>
+          <select name="currency" id="currency" bind:value={currency} on:change={update}>
             <option value="usd">US Dollar ($)</option>
             <option value="idr">Indonesian Rupiah (Rp)</option>
             <option value="twd">New Taiwan Dollar (NT$)</option>
@@ -104,7 +102,7 @@
             <option value="zar">South African Rand (R)</option>
             <option value="xdr">IMF Special Drawing Rights (XDR)</option>
           </select>
-          <label class='nanoPaymentCurrencyButtonLabel unselectable visually-hidden' for='localCurrency'>Currency</label>
+          <label class='nanoPaymentCurrencyButtonLabel unselectable visually-hidden' for='currency'>Currency</label>
         </div>
       </div>
     </fieldset>
@@ -154,7 +152,7 @@
 
 /* treat nano payment amount and currency like other labels so focus styles match */
 #patronageForm #amount,
-#patronageForm #localCurrency {
+#patronageForm #currency {
   border-width: 0.16rem;
   border-style: solid;
 }
