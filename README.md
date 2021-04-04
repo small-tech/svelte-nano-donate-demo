@@ -2,6 +2,8 @@
 
 A simple SvelteKit project demonstrating how to use the Svelte Nano Donate component.
 
+__Work-in-progress (Sun, Apr 4, 2021).__ I’m using this project to develop the component. It will then be pulled out into its own repository and published on npm.
+
 ## Install
 
 ```shell
