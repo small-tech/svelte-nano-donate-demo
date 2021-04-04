@@ -95,6 +95,7 @@
     color: rgb(48, 67, 73);
     padding: 0.5em;
     font-size: 1.25em;
+    width: 100%;
   }
 
   * {
