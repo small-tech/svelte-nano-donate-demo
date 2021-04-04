@@ -46,7 +46,7 @@
 </script>
 
 <section>
-  <h2>Donate</h2>
+  <h2>Donate NANO</h2>
   <form on:submit|preventDefault>
     <fieldset id='nanoAmount'>
       <legend class='visually-hidden'>Donate NANO</legend>
@@ -76,6 +76,7 @@
     /* give form a max-width and center it when it exceeds that width */
     margin: 1em auto;
     max-width: 21em;
+    text-align: center;
   }
 
   /* Disable the default fieldset styles (border + spacing) */
@@ -98,48 +99,13 @@
     width: 100%;
   }
 
-  * {
-    text-align: center;
-  }
-
   /* space between QR code and text below */
   canvas {
     margin-bottom: 0.5em;
     max-width: 21em;
   }
 
-  #sendNanoLink {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    padding: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 1.5em;
-  }
-
-  a {
-    color: rgb(48, 67, 73);
-  }
-
-  @supports (display: grid) {
-    /* remove spacing required for hierarchy when there’s no grid */
-
-    form {
-      /* margin-bottom: 0.5em; */
-      display: grid;
-      grid-template-columns: 30% 1fr;
-      grid-template-areas: "amount currency";
-      grid-gap: 0.5em;
-    }
-
-    #nanoAmount {
-      grid-column: amount;
-    }
-
-    #currency {
-      grid-column: currency;
-    }
-  } /* end @supports display: grid; */
+  a { color: rgb(48, 67, 73); }
 
   p small {
     color: #7d7d7d;
@@ -172,5 +138,36 @@
     position: absolute !important;
     width: 1px !important;
     white-space: nowrap !important;
+  }
+
+  #sendNanoLink {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+  }
+
+  @supports (display: grid) {
+    form {
+      display: grid;
+      grid-template-columns: 30% 1fr;
+      grid-template-areas: "amount currency";
+      grid-gap: 0.5em;
+    }
+
+    #nanoAmount { grid-column: amount; }
+    #currency { grid-column: currency; }
+  }
+
+  /* Fix the ugly select box arrow in Firefox. */
+  /* Courtesy: https://github.com/twbs/bootstrap/issues/16201#issuecomment-498358474 */
+  @supports (-moz-appearance:none) {
+    select {
+      -moz-appearance:none !important;
+      background: transparent url('data:image/gif;base64,R0lGODlhBgAGAKEDAFVVVX9/f9TU1CgmNyH5BAEKAAMALAAAAAAGAAYAAAIODA4hCDKWxlhNvmCnGwUAOw==') right center no-repeat !important;
+      background-position: calc(100% - 5px) center !important;
+    }
   }
 </style>
