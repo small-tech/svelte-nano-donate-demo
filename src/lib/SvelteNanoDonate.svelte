@@ -45,20 +45,20 @@
   }
 </script>
 
-<form id='patronageForm' on:submit|preventDefault>
-  <div id='nanoPayment'>
+<form on:submit|preventDefault>
+  <div>
     <fieldset>
       <div class='nanoAmount'>
         <legend class='visually-hidden'>Amount of donation (NANO)</legend>
         <div class='option'>
           <input id='amount' type='number' min='1' bind:value={amount} on:input={updateModel}>
-          <label class='nanoPaymentNumberButtonLabel unselectable visually-hidden' for='amount'>Amount</label>
+          <label class='unselectable visually-hidden' for='amount'>Amount</label>
         </div>
         <div class='option currency'>
-          <select name="currency" id="currency" bind:value={currency} on:change={updateModel}>
+          <select name="currency" id="currency" bind:value={currency} on:change={updateModel} on:blur={updateModel}>
             <CurrencyOptions />
           </select>
-          <label class='nanoPaymentCurrencyButtonLabel unselectable visually-hidden' for='currency'>Currency</label>
+          <label class='unselectable visually-hidden' for='currency'>Currency</label>
         </div>
       </div>
     </fieldset>
@@ -142,7 +142,7 @@
     }
   } /* end @supports display: grid; */
 
-  #patronageForm p small {
+  p small {
     color: #7d7d7d;
     font-size: 1em;
     display: block;
