@@ -45,7 +45,7 @@
   }
 </script>
 
-<form id='patronageForm' on:submit|preventDefault >
+<form id='patronageForm' on:submit|preventDefault>
   <div id='nanoPayment'>
     <fieldset>
       <div class='nanoAmount'>
@@ -71,43 +71,28 @@
 </form>
 
 <style>
-  #patronageForm {
+  form {
     /* give form a max-width and center when it exceeds that width */
     margin: 1em auto;
     max-width: 21em;
   }
   /* Disable the default fieldset styles (border + spacing) */
 
-  #patronageForm fieldset {
+  fieldset {
     border: none;
     margin: 0 0 1em 0; /* spacing between rows of buttons (overridden when there’s grid) */
     padding: 0;
   }
 
-  /* Style labels as buttons */
-
-  #patronageForm .selectButton + label,
-  #patronageForm #customDonationLabel {
-    background-color: #eee;
-    /* rems used for borders so they’re consistent regardless of font size */
-    border-radius: 0.55rem;
-    border: 0.16rem solid var(--background); /* essentially transparent (same as background colour) until it has focus */
-    color: #304349;
-    line-height: 1em;
-    margin: 0 0 0.25em 0; /* spacing between buttons (when there’s no grid) */
-    padding: 0.75em;
-    position: relative;
-    text-align: center;
-  }
 
   /* treat nano payment amount and currency like other labels so focus styles match */
-  #patronageForm #amount,
-  #patronageForm #currency {
+  #amount,
+  #currency {
     border-width: 0.16rem;
     border-style: solid;
   }
 
-  #patronageForm #amount:before {
+  #amount:before {
     border-radius: 0.4rem;
     content: "";
     display: block;
@@ -118,23 +103,13 @@
     width: 100%;
   }
 
-  /* tweak custom donation field to better fit space */
-  #patronageForm #customDonationLabel {
-    font-size: 1em;
-    line-height: 1;
-  }
-
-  #patronageForm #customDonationLabel input {
-    margin-left: 0.5em; /* when there’s no grid */
-  }
-
   /* center Nano payment link */
-  #patronageForm #amountInNanoDisplay {
+  #amountInNanoDisplay {
     text-align: center;
   }
 
   /* space between QR code and text below */
-  #patronageForm canvas {
+  canvas {
     margin-bottom: 0.5em;
     max-width: 21em;
   }
@@ -143,40 +118,29 @@
   Grid layout (when grid is supported by the browser) */
 
   @supports (display: grid) {
-
     /* remove spacing required for hierarchy when there’s no grid */
-    #patronageForm .selectButton + label,
-    #patronageForm #customDonationLabel {
-      margin: 0;
-      padding: 0.75em 0.25em;
-    }
 
-    #patronageForm fieldset {
+    fieldset {
       margin-bottom: 0.5em;
     }
 
-    #patronageForm .nanoAmount {
+    .nanoAmount {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       grid-gap: 0.2em;
     }
 
-    #patronageForm .nanoAmount .option {
+    .nanoAmount .option {
       grid-column: span 1; /* donation tier options and nano amount option span one column */
       grid-row: span 1; /* donation tier options span one row */
     }
 
     /* Type of donation and payment type */
 
-    #patronageForm .nanoAmount .option.currency {
+    .nanoAmount .option.currency {
       grid-column: span 3; /* make nano currency span three columns of grid */
     }
   } /* end @supports display: grid; */
-
-  /* -------------------------------------------------------------------------
-  Messages and notes */
-
-  /* Note below button */
 
   #patronageForm p small {
     color: #7d7d7d;
@@ -185,9 +149,6 @@
     font-style: italic;
     text-align: center;
   }
-
-  /* -------------------------------------------------------------------------
-  Behaviour-related styles */
 
   /* Courtesy: https://stackoverflow.com/a/2310809 */
   .unselectable {
@@ -200,7 +161,6 @@
   }
 
   /* a class for hiding items both visually and from assistive technology */
-
   .hidden {
     display: none;
   }
