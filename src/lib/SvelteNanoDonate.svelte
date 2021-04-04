@@ -93,7 +93,8 @@
     border-radius: 5px;
     box-sizing: border-box;
     color: rgb(48, 67, 73);
-    padding: 1em;
+    padding: 0.5em;
+    font-size: 1.25em;
   }
 
   * {
