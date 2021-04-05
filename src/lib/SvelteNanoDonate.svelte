@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import QRious from 'qrious'
   import CurrencyOptions from './CurrencyOptions.svelte'
-  import { lighten } from './QuickAndDirtyColour.js'
+  import { lighten } from './QuickAndDirtyColour'
 
   // Props. Pass these to the component.
   export let address
@@ -28,48 +28,15 @@
         // Apply intelligent calculations for properties that haven’t been specifically passed.
         switch(cssVariable) {
           case 'colour':
-            const borderColour = theme['border-colour'] === undefined ? lighten(theme['colour'], 70) : theme['border-colour']
-            const darkModeColour = theme['dark-mode-colour'] === undefined ? borderColour : theme['dark-mode-colour']
+            const themeColour = theme['colour']
+            const borderColourOverride = theme['border-colour']
+
+            const borderColour = borderColourOverride === undefined ? lighten(themeColour, 50) : borderColourOverride
+
             document.documentElement.style.setProperty('--border-colour', borderColour)
-            document.documentElement.style.setProperty('--dark-mode-colour', darkModeColour)
-            document.documentElement.style.setProperty('--dark-mode-border-colour', theme['colour'])
-          break
-
-          case 'border-colour':
-            const colour = theme['colour'] === undefined ? darken(theme['border-colour'], 70) : theme['colour']
-            const darkModeBorderColour = them['dark-mode-border-colour'] === undefined ? colour : theme['dark-mode-border-colour']
-
-            document.documentElement.style.setProperty('--colour', colour)
-            document.documentElement.style.setProperty('--dark-mode-border-colour', darkModeBorderColour)
           break
         }
       })
-
-      // Note that in order to have dark mode colours that are overriden, we need to carry out the
-      // application of light/dark mode using JavaScript, not CSS. This is because the assingments
-      // in the media query in CSS are not reactive.
-      const cssColour = document.documentElement.style.getPropertyValue('--colour')
-      const cssBorderColour = document.documentElement.style.getPropertyValue('--border-colour')
-      const cssBackgroundColour = document.documentElement.style.getPropertyValue('--background-colour')
-
-      const cssDarkModeColour = document.documentElement.style.getPropertyValue('--dark-mode-colour')
-      const cssDarkModeBorderColour = document.documentElement.style.getPropertyValue('--dark-mode-border-colour')
-      const cssDarkModeBackgroundColour = document.documentElement.style.getPropertyValue('--dark-mode-background-colour')
-
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-      function applyColourScheme (event) {
-        if (event.matches) {
-          document.documentElement.style.setProperty('--colour', cssDarkModeColour)
-          document.documentElement.style.setProperty('--border-colour', cssDarkModeBorderColour)
-          document.documentElement.style.setProperty('--background-colour', cssDarkModeBackgroundColour)
-        } else {
-          document.documentElement.style.setProperty('--colour', cssColour)
-          document.documentElement.style.setProperty('--border-colour', cssBorderColour)
-          document.documentElement.style.setProperty('--background-colour', cssBackgroundColour)
-        }
-      }
-      mediaQuery.addEventListener('change', applyColourScheme)
-      applyColourScheme(mediaQuery)
     }
 
     // Get the current exchange rates for nano at the start.
@@ -126,41 +93,39 @@
 
   <canvas bind:this={qrCodeView}></canvas>
 
-  <p><small>Exchange rates courtesy of <a href='https://www.coingecko.com/en/api'>CoinGecko API</a>. Widget by <a href='https://small-tech.org/fund-us'>Small Technology Foundation.</a></small></p>
+  <p><small><span>Exchange rates courtesy of </span><a href='https://www.coingecko.com/en/api'>CoinGecko API</a>. <span>Widget by </span><a href='https://small-tech.org/fund-us'>Small Technology Foundation.</a></small></p>
 </section>
 
 <style>
   :root {
     --colour: rgb(48, 67, 73);
-    --border-colour:rgb(215,216,217);
+    --border-colour:rgb(183,186,188);
     --background-colour:white;
-
-    /* By default, we flip the colour and border colour in dark mode */
-    --dark-mode-colour: rgb(215,216,217);
-    --dark-mode-border-colour: rgb(48, 67, 73);
-    --dark-mode-background-colour: black;
   }
 
   section {
-    /* give form a max-width and center it when it exceeds that width */
+    /* Give form a max-width and center it when it exceeds that width. */
     margin: 1em auto;
     max-width: 21em;
     text-align: center;
     background: var(--background-colour);
   }
 
-  /* Disable the default fieldset styles (border + spacing) */
+  /* Disable the default fieldset styles (border + spacing). */
   fieldset {
     border: none;
     padding: 0;
     display: contents;
   }
 
+  h2 {
+    color: var(--colour);
+  }
+
   input, select, a {
     color: var(--colour);
   }
 
-  /* treat nano payment amount and currency like other labels so focus styles match */
   input, select {
     border-style: solid;
     background: var(--background-colour);
@@ -172,18 +137,24 @@
     width: 100%;
   }
 
-  /* space between QR code and text below */
   canvas {
     margin-bottom: 0.5em;
     max-width: 21em;
   }
 
-  p small {
-    color: #7d7d7d;
+  small {
+    color: var(--colour);
     font-size: 1em;
     display: block;
     font-style: italic;
     text-align: center;
+  }
+
+  /* Note: we can’t do small:not(a) here as the filter is
+     applied to the whole small tag regardless although
+     the target specifier is correct. */
+  small span {
+    filter:grayscale(100)
   }
 
   /* Courtesy: https://stackoverflow.com/a/2310809 */
@@ -232,13 +203,12 @@
     #currency { grid-column: currency; }
   }
 
-  /* Dark mode */
+  /* Dark mode. */
   @media (prefers-color-scheme: dark) {
-    :root {
-      --colour: var(--dark-mode-colour);
-      --border-colour: var(--dark-mode-border-colour);
-      --background-colour: var(--dark-mode-background-colour);
-    }
+    section { filter: invert(1) hue-rotate(180deg); }
+
+    /* Re-invert the canvas as the QRCode should never be inverted. */
+    canvas { filter: invert(1) hue-rotate(180deg); }
   }
 
   /* Fix the ugly select box arrow in Firefox. */
