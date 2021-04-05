@@ -1,6 +1,6 @@
 {
 	"name": "nano-donate",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
@@ -14,6 +14,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-static": "^1.0.0-next.4",
 		"qrious": "^4.0.2"
 	}
 }
