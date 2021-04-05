@@ -21,24 +21,60 @@
 
   onMount (async () => {
     if (theme !== null) {
-      // Apply any CSS variables that were provided in the
-      // style property.
-      console.log(theme)
+      // Apply any CSS variables that were provided in the style property.
       Object.keys(theme).forEach(cssVariable => {
-        document.documentElement.style
-    .setProperty(`--${cssVariable}`, theme[cssVariable])
+        document.documentElement.style.setProperty(`--${cssVariable}`, theme[cssVariable])
 
-        // If base colour is being set, calculate the other
-        // colours from it unless they’ve been specifically provided.
-        if (cssVariable === 'colour' && theme['border-colour'] === undefined) {
-          const borderColour = lighten(theme['colour'], 70)
-          document.documentElement.style.setProperty('--border-colour', borderColour)
+        // Apply intelligent calculations for properties that haven’t been specifically passed.
+        switch(cssVariable) {
+          case 'colour':
+            const borderColour = theme['border-colour'] === undefined ? lighten(theme['colour'], 70) : theme['border-colour']
+            const darkModeColour = theme['dark-mode-colour'] === undefined ? borderColour : theme['dark-mode-colour']
+            document.documentElement.style.setProperty('--border-colour', borderColour)
+            document.documentElement.style.setProperty('--dark-mode-colour', darkModeColour)
+            document.documentElement.style.setProperty('--dark-mode-border-colour', theme['colour'])
+          break
+
+          case 'border-colour':
+            const colour = theme['colour'] === undefined ? darken(theme['border-colour'], 70) : theme['colour']
+            const darkModeBorderColour = them['dark-mode-border-colour'] === undefined ? colour : theme['dark-mode-border-colour']
+
+            document.documentElement.style.setProperty('--colour', colour)
+            document.documentElement.style.setProperty('--dark-mode-border-colour', darkModeBorderColour)
+          break
         }
       })
+
+      // Note that in order to have dark mode colours that are overriden, we need to carry out the
+      // application of light/dark mode using JavaScript, not CSS. This is because the assingments
+      // in the media query in CSS are not reactive.
+      const cssColour = document.documentElement.style.getPropertyValue('--colour')
+      const cssBorderColour = document.documentElement.style.getPropertyValue('--border-colour')
+      const cssBackgroundColour = document.documentElement.style.getPropertyValue('--background-colour')
+
+      const cssDarkModeColour = document.documentElement.style.getPropertyValue('--dark-mode-colour')
+      const cssDarkModeBorderColour = document.documentElement.style.getPropertyValue('--dark-mode-border-colour')
+      const cssDarkModeBackgroundColour = document.documentElement.style.getPropertyValue('--dark-mode-background-colour')
+
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      function applyColourScheme (event) {
+        if (event.matches) {
+          document.documentElement.style.setProperty('--colour', cssDarkModeColour)
+          document.documentElement.style.setProperty('--border-colour', cssDarkModeBorderColour)
+          document.documentElement.style.setProperty('--background-colour', cssDarkModeBackgroundColour)
+        } else {
+          document.documentElement.style.setProperty('--colour', cssColour)
+          document.documentElement.style.setProperty('--border-colour', cssBorderColour)
+          document.documentElement.style.setProperty('--background-colour', cssBackgroundColour)
+        }
+      }
+      mediaQuery.addEventListener('change', applyColourScheme)
+      applyColourScheme(mediaQuery)
     }
 
     // Get the current exchange rates for nano at the start.
     const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd,idr,twd,eur,krw,jpy,rub,cny,aed,ars,aud,bdt,bhd,bmd,brl,cad,chf,clp,czk,dkk,gbp,hkd,huf,ils,inr,kwd,lkr,mmk,mxn,myr,ngn,nok,nzd,php,pkr,pln,sar,sek,sgd,thb,try,uah,vef,vnd,zar,xdr')
+
     exchangeRates = (await response.json()).nano
 
     // Initialise the QRCode (nice and large so it looks good on
@@ -47,6 +83,7 @@
       element: qrCodeView,
       foreground: 'black',
       background: 'white',
+      padding: 40,
       value: '',
       size: 1600
     })
@@ -96,6 +133,12 @@
   :root {
     --colour: rgb(48, 67, 73);
     --border-colour:rgb(215,216,217);
+    --background-colour:white;
+
+    /* By default, we flip the colour and border colour in dark mode */
+    --dark-mode-colour: rgb(215,216,217);
+    --dark-mode-border-colour: rgb(48, 67, 73);
+    --dark-mode-background-colour: black;
   }
 
   section {
@@ -103,7 +146,7 @@
     margin: 1em auto;
     max-width: 21em;
     text-align: center;
-    background: white;
+    background: var(--background-colour);
   }
 
   /* Disable the default fieldset styles (border + spacing) */
@@ -120,7 +163,7 @@
   /* treat nano payment amount and currency like other labels so focus styles match */
   input, select {
     border-style: solid;
-    background: #fff;
+    background: var(--background-colour);
     border: 0.2em solid var(--border-colour);
     border-radius: 5px;
     box-sizing: border-box;
@@ -187,6 +230,15 @@
 
     #nanoAmount { grid-column: amount; }
     #currency { grid-column: currency; }
+  }
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --colour: var(--dark-mode-colour);
+      --border-colour: var(--dark-mode-border-colour);
+      --background-colour: var(--dark-mode-background-colour);
+    }
   }
 
   /* Fix the ugly select box arrow in Firefox. */
