@@ -25,16 +25,12 @@
       Object.keys(theme).forEach(cssVariable => {
         document.documentElement.style.setProperty(`--${cssVariable}`, theme[cssVariable])
 
-        // Apply intelligent calculations for properties that haven’t been specifically passed.
-        switch(cssVariable) {
-          case 'colour':
-            const themeColour = theme['colour']
-            const borderColourOverride = theme['border-colour']
-
-            const borderColour = borderColourOverride === undefined ? lighten(themeColour, 50) : borderColourOverride
-
-            document.documentElement.style.setProperty('--border-colour', borderColour)
-          break
+        // Derive the border colour from the (base) colour unless one has been explicitly specified.
+        if (cssVariable === 'colour') {
+          document.documentElement.style.setProperty(
+            '--border-colour',
+            theme['border-colour'] === undefined ? lighten(theme['colour'], 50) : theme['border-colour']
+          )
         }
       })
     }
@@ -71,7 +67,18 @@
 </script>
 
 <section>
-  <h2>Donate NANO</h2>
+  <h2>
+    Donate NANO
+    <!-- Nano logo -->
+    <svg viewBox='0 0 1770.2 780.1'>
+      <g>
+        <path d='M985.7,390c0,55.6-45.1,100.6-100.6,100.6S784.4,445.6,784.4,390c0-75.5-25.2-100.6-100.6-100.6   S583.2,314.6,583.2,390c0,55.6-45.1,100.6-100.6,100.6S381.9,445.6,381.9,390c0-55.6,45.1-100.6,100.6-100.6   c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6s100.6,45.1,100.6,100.6c0,75.5,25.2,100.6,100.6,100.6   C940.7,289.4,985.7,334.5,985.7,390z'/>
+        <circle cx='281.2' cy='591.3' r='100.6'/>
+        <path d='M1589.6,188.7c0,55.6-45.1,100.6-100.6,100.6c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6   c-75.5,0-100.6,25.2-100.6,100.6c0,55.6-45.1,100.6-100.6,100.6c-55.6,0-100.6-45.1-100.6-100.6c0-55.6,45.1-100.6,100.6-100.6   c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6c75.5,0,100.6-25.2,100.6-100.6c0-55.6,45.1-100.6,100.6-100.6   C1544.5,88.1,1589.6,133.2,1589.6,188.7z'/>
+      </g>
+    </svg>
+  </h2>
+
   <form on:submit|preventDefault>
     <fieldset id='nanoAmount'>
       <legend class='visually-hidden'>Donate NANO</legend>
@@ -79,7 +86,7 @@
       <label class='unselectable visually-hidden' for='amount'>Amount</label>
     <fieldset>
 
-    <fieldset id="currency">
+    <fieldset id='currency'>
       <select bind:value={currency} on:change={updateModel} on:blur={updateModel}>
         <CurrencyOptions />
       </select>
@@ -142,6 +149,14 @@
     max-width: 21em;
   }
 
+  svg {
+    width: 1.5em;
+  }
+
+  svg path, svg circle {
+    fill: var(--colour);
+  }
+
   small {
     color: var(--colour);
     font-size: 1em;
@@ -195,7 +210,7 @@
     form {
       display: grid;
       grid-template-columns: 30% 1fr;
-      grid-template-areas: "amount currency";
+      grid-template-areas: 'amount currency';
       grid-gap: 0.5em;
     }
 
