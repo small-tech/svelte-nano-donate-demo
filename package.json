@@ -7,14 +7,14 @@
 		"start": "svelte-kit start"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-node": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.4",
 		"@sveltejs/kit": "next",
 		"svelte": "^3.29.0",
 		"vite": "^2.1.0"
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^1.0.0-next.4",
+		"@small-tech/svelte-nano-donate": "^1.0.0",
 		"qrious": "^4.0.2"
 	}
 }

@@ -1,5 +1,5 @@
 <script>
-  import Donate from '$lib/SvelteNanoDonate.svelte'
+  import Donate from '@small-tech/svelte-nano-donate'
 </script>
 
 <main>
