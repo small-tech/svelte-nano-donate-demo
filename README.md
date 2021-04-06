@@ -2,6 +2,8 @@
 
 A simple SvelteKit project demonstrating how to use the [Svelte Nano Donate component](https://github.com/small-tech/svelte-nano-donate).
 
+⯈ [Live demo](https://small-tech.org/demo/svelte-nano-donate/)
+
 ## Install
 
 ```shell
