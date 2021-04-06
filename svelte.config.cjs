@@ -6,6 +6,10 @@ module.exports = {
   kit: {
     adapter: static(),
 
+    paths: {
+      base: '/demo/svelte-nano-donate/'
+    },
+
     // hydrate the <div id="svelte"> element in src/app.html
     target: '#svelte',
 
