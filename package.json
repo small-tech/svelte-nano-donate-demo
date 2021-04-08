@@ -42,7 +42,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@small-tech/svelte-nano-donate": "^1.0.0",
-		"qrious": "^4.0.2"
+		"@small-tech/svelte-nano-donate": "^1.0.4"
 	}
 }

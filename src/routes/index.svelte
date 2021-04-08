@@ -12,12 +12,13 @@
 </main>
 
 <style>
-  :root {
-    background-color: white;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      background-color: black;
-    }
-  }
+	:root {
+		background-color: white;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			background-color: black;
+		}
+	}
 </style>
