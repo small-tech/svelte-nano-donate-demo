@@ -7,7 +7,7 @@
     amount=10
     currency=usd
     address=nano_1hfmyyjtm4muiudw1m8dz54jry13jx8xykp9kz1mx3uqe4dtsb3yrdkjgy6g
-    theme={{colour: '#4A90E2'}}
+    theme={{colour: '#0062cc'}}
   />
 </main>
 
